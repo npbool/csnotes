@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>My Notes - Basics</title>
+        <link rel="stylesheet" type="text/css" href="../css/default.css" />
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+        <div id="header">
+            <div id="logo">
+                <a href="../">My Hakyll Blog</a>
+            </div>
+            <div id="navigation">
+                <a href="../">Home</a>
+                <a href="../about.html">About</a>
+                <a href="../archive.html">Archive</a>
+            </div>
+        </div>
+
+        <div id="content">
+            <div class="post-header">
+                <h1>Basics</h1>
+            </div>
+            <div class="post-main">
+                <div class="info">
+    Posted on April 11, 2016
+    
+</div>
+
+<h1 id="model-of-computation">Model of computation</h1>
+<h2 id="monte-carlo">Monte-Carlo</h2>
+<p>stop in finite time, answer may be incorrect. <em>One-sided error</em>: make error only in one direction. E.g. when answer is ‘y’, output P[‘y’]<span class="math inline">\(\ge \epsilon\)</span>&gt;0, when answer is ‘no’, output P[‘n’]=1. So that when output is ‘yes’, answer must be yes. Run <span class="math inline">\(t\)</span> times, <span class="math inline">\(P(err)=(1-\epsilon)^t\)</span>. With prob at least <span class="math inline">\(1-\delta\)</span>, <span class="math inline">\(O(\log {1\over \delta})\)</span> iteration gives correct answer. <em>RP</em>: Randomized Polynomial.</p>
+<p><em>Two-sided error</em>: when answer is yes, <span class="math inline">\(P(yes)=0.5+\epsilon\)</span>; when answer is no, <span class="math inline">\(P(no)=0.5+\epsilon\)</span>. Majority vote after <span class="math inline">\(t\)</span> times. With prob at least <span class="math inline">\(1-\delta\)</span>, <span class="math inline">\(t=O(\log {1\over \delta})\)</span> suffices. <em>BPP</em>: bounded error probabilistic polynomial</p>
+<p><strong>proof</strong>: <span class="math inline">\(P(error)=\sum_{i=0}^{\lfloor t/2 \rfloor} \binom{t}{i} (0.5+\epsilon)^i (0.5-\epsilon)^{t-i} \le \sum_{i=0}^{\lfloor t/2 \rfloor} \binom{t}{i} (0.5+\epsilon)^{t/2} (0.5-\epsilon)^{t/2}\)</span>, omit.</p>
+<h2 id="las-vegas">Las Vegas</h2>
+<p>always correct. running time may be unbounded. Expected running time is bounded. Las Vegas <span class="math inline">\(\Rightarrow\)</span> Monte Carlo: Run fixed time, output arbitrary if not finished. <em>ZPP</em>: Zero-error Probabilistic Polynomial time.</p>
+<p>Does randomization helps? P=RP or P=BPP? not known.</p>
+<h1 id="checking-matrix-multiplication">Checking matrix multiplication</h1>
+<p>check <span class="math inline">\(AB=C\)</span>. Naive: <span class="math inline">\(O(n^3) or O(n^{2.376})\)</span>. Randomized: <span class="math inline">\(O(n^2)\)</span>. Use finite <span class="math inline">\(S\)</span>. Pick <span class="math inline">\(r=(r_1,\ldots, r_n)\)</span> where <span class="math inline">\(r_i\in S\)</span> iid. If <span class="math inline">\(AB\neq C\)</span>, then <span class="math inline">\(P(ABr=Cr) \le {1\over |S|}\)</span>. Defered desicion: for <span class="math inline">\(r_2, \ldots, r_n\)</span>, less than one <span class="math inline">\(r_1\in S\)</span> satisfies <span class="math inline">\(ABr=Cr\)</span>.</p>
+<p><strong>general</strong>: check if <span class="math inline">\(A(r)\)</span> is true for all <span class="math inline">\(r\)</span>. <em>searching for a witness</em> that <span class="math inline">\(P(r)=0\)</span>. <strong>algorithm</strong>: Pick <span class="math inline">\(r\)</span> indenpently for <span class="math inline">\(t\)</span> times. Output 1 if all <span class="math inline">\(A(r_i)\)</span> is true; else 0. <strong>limitation</strong>: density of <span class="math inline">\(\{r: A(r)=0\}\)</span> is large.</p>
+<h1 id="check-associativity-of-operator">Check associativity of operator</h1>
+<p>Given <span class="math inline">\(\circ\)</span> and finite <span class="math inline">\(X\)</span>, <span class="math inline">\(|X|=n\)</span>. Check if <span class="math inline">\(\circ\)</span> is associative over <span class="math inline">\(X\)</span>. naive <span class="math inline">\(O(n^3)\)</span>. Randomized: <span class="math inline">\(O(n^2)\)</span>. Direct implementation is impractical because a family of binary operators exists such that number of non-associative triple <span class="math inline">\((i,j,k)\)</span> is at most a constant (proof?). density is <span class="math inline">\(O(1/n^3)\)</span>.</p>
+<h2 id="rajagopalan-and-schulman-1">Rajagopalan and Schulman [^1]</h2>
+<p><span class="math inline">\(R \in 2^X \equiv \mathcal{X}\)</span>. <span class="math inline">\(r\in\{0,1\}^n\)</span> is indicator vector: <span class="math inline">\(r_i=1\Rightarrow i\in R\)</span>. <span class="math inline">\(R\equiv \sum_i r_i\cdot i\)</span> Define <span class="math display">\[
+R+S = \sum_i (r_i\oplus s_i)\cdot i\\
+R\circ S = \sum_{i,j\in X} (r_i s_j)(i\circ j)
+\]</span> <strong>algorithm</strong>: pick <span class="math inline">\(R,S,T\)</span> iid from <span class="math inline">\(\mathcal X\)</span>. If <span class="math inline">\((R\circ S)\circ T \neq R\circ (S\circ T)\)</span>, output 0. else 1. <strong>analysis</strong>: If <span class="math inline">\(\circ\)</span> is not asociative, <span class="math inline">\(P(\neq)\ge 1/8\)</span>.</p>
+<p>Suppose <span class="math inline">\(i^*, j^*, k^*\)</span> is not associative. <span class="math inline">\(\forall R_0,S_0,T_0\)</span> such that <span class="math inline">\(i^*\notin R_0, j^*\notin S_0, k^*\notin T_0\)</span>, define <span class="math inline">\(R_1 = R_0 \cup \{i\}, S_1, T_1\)</span>. <span class="math inline">\(\Phi = \{(R_a,S_b,T_c)|a,b,c=0,1\}, |\Phi|=8\)</span>.</p>
+<p>Let <span class="math display">\[
+f(i,j,k)=(i\circ j)\circ k- i\circ (j\circ k)\\
+f(R,S,T)=\sum_{i\in R, j\in S, k\in T} f(i,j,k)
+\]</span> inclusion-exclusion priciple: <span class="math display">\[
+f(i^*, j^*, k^*) = f(R_1, S_1, T_1) − f(R_1, S_1, T_0) − f(R_1, S_0, T_1) − f(R_0, S_1, T_1) +
+f(R_1, S_0, T_0) + f(R_0, S1, T_0) + f(R_0, S_0, T_1) − f(R_0, S_0, T_0)
+\]</span> At least one term of right side is not zero <span class="math inline">\(\Rightarrow\)</span> <span class="math inline">\(P(\neq)\ge 1/8\)</span></p>
+<p>S. Rajagopalan and L. Schulman, Verifying Identities, Proc. IEEE FOCS 1996, pp. 612– 616.</p>
+
+            </div>
+        </div>
+        <div id="footer">
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+        </div>
+    </body>
+</html>
